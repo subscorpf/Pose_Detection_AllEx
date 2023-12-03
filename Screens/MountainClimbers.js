@@ -2,29 +2,20 @@ import React, {useEffect, useState, useRef} from 'react';
 import HumanPose from 'react-native-human-pose';
 import {View, Text, StyleSheet, TouchableOpacity, Button} from 'react-native';
 import Tts from 'react-native-tts';
-import { find_angle } from '../Util/HelperFunction';
+
 
 let step_into_frame= 0;
-let go_lower =0;
-const WallSit = () => {
+
+const MoutainClimbers = () => {
   //Boolean to check of user Visibility (For StopWatch)
   const [user_visibility, setUserVisibility] = useState(false);
 
   //Stores confidence of Both Right and Left joints
   const [shoulder_confidence, setShoulderCon] = useState (NaN);
-  const [knee_confidence, setKneeCon] = useState (NaN);
-  
-  //Joints
-  const [knee, setKnee] = useState ([]);
-  const [hip, setHip] = useState ([]);
-  const [ankle, setAnkle] = useState ([]);
 
   //Stop watch
   const [timer, setTimer] = useState(0);
   const countRef = useRef(null);// reference to the interval ID
-
-  //Set Angle
-  const [kneeAngle, setKneeAngle] = useState (NaN);
 
   // function to handle the start button press
   const handleStart = () => {
@@ -63,42 +54,11 @@ const WallSit = () => {
   //Pose Detetct
   const onPoseDetected = (pose) => {
     
+    setShoulderCon(pose[0]?.pose?.leftShoulder?.confidence + pose[0]?.pose?.rightShoulder?.confidence)
      //Get user Joints
-     if (pose[0]?.pose?.leftShoulder?.confidence > pose[0]?.pose?.rightShoulder?.confidence){
-        
-      setHip([pose[0]?.pose?.leftHip?.x, pose[0]?.pose?.leftHip?.y]);
-      setKnee([pose[0]?.pose?.leftKnee?.x, pose[0]?.pose?.leftKnee?.y]);
-      setAnkle([pose[0]?.pose?.leftAnkle?.x, pose[0]?.pose?.leftAnkle?.y]);
-      setKneeCon(pose[0]?.pose?.leftKnee?.confidence);
-      setShoulderCon(pose[0]?.pose?.leftShoulder?.confidence);
-      //console.log("Left");
- 
-    }
-    else {
-      setHip([pose[0]?.pose?.rightHip?.x, pose[0]?.pose?.rightHip?.y]);
-      setKnee([pose[0]?.pose?.rightKnee?.x, pose[0]?.pose?.rightKnee?.y]);
-      setAnkle([pose[0]?.pose?.rightAnkle?.x, pose[0]?.pose?.rightAnkle?.y]);
-      setKneeCon(pose[0]?.pose?.rightKnee?.confidence);
-      setShoulderCon(pose[0]?.pose?.leftShoulder?.confidence);
-      //console.log("Right");
-    }
-    setKneeAngle(find_angle(hip, knee, ankle));
-    console.log('Knee angle = ', kneeAngle);
-
-    if (shoulder_confidence > 0.6 && knee_confidence > 0.6){
-      if (kneeAngle<=120){
-        setUserVisibility(true);
-      }
-      else {
-        setUserVisibility(false);
-        if(go_lower>20){
-          go_lower = 0;
-          step_into_frame = 0;
-          Tts.speak('Go Lower');
-        }
-        go_lower++;
-
-      }
+     if (shoulder_confidence > 1.5){
+      setUserVisibility(true);
+      
       
     }
     else{
@@ -120,7 +80,7 @@ const WallSit = () => {
     <>
 
     <View style={{flex: 1}}>
-      <Text>Wall Sit</Text>
+      <Text>Mountain Climbers</Text>
       <HumanPose
         height={500}
         width={400}
@@ -140,6 +100,8 @@ const WallSit = () => {
               <Text style={styles.buttonText}>Reset</Text>
         </TouchableOpacity>
       </View>
+      
+      
 
 </>
   );
@@ -174,4 +136,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default WallSit;
+export default MoutainClimbers;

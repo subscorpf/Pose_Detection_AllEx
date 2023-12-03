@@ -6,10 +6,12 @@ import { find_angle } from '../Util/HelperFunction';
 
 let step_into_frame= 0;
 let adjust_arms = 0;
+let set_Limit= 1;
 
 const ShoulderPress = () => {
   //Rep Counter
   const [noOfReps, setNoOfReps] = useState(0);
+  const [set, setSet] = useState(0);
   
   //Confidence Test case
   const [shoulder_confidence, setShoulderCon] = useState (NaN);
@@ -72,7 +74,9 @@ const ShoulderPress = () => {
         }
         if (stage=='Down' && AngleL>160 && AngleR>160){
           setStage('Up');
-          setNoOfReps(pre=>pre+1); 
+          if (set < set_Limit){
+            setNoOfReps(pre=>pre+1);
+          }
         }
       }
       
@@ -87,18 +91,25 @@ const ShoulderPress = () => {
       step_into_frame++;
     }
 
+    if (set < set_Limit){
+      if (noOfReps == 10){
+        setNoOfReps(0);
+        setSet(pre=>pre+1);
+      }
+    }
+
   }; //POSE Detect
 
 
 
   return (
     <View style={{flex: 1}}>
-      <Text>Shoulder Press</Text>
+      <Text>Shoulder Press                                                          Set:{set}</Text>
       <HumanPose
         height={500}
         width={400}
         enableKeyPoints={true}
-        flipHorizontal={false}
+        flipHorizontal={true}
         enableSkeleton ={true}
         isBackCamera={false}
         color={'255, 0, 0'}

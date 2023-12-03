@@ -8,6 +8,7 @@ import { find_angle } from '../Util/HelperFunction';
 let step_into_frame= 0;
 let foot_aligned = 0;
 let difference = 0;
+let set_Limit= 1;
 
 const JumpingJack = () => {
   //Boolean initial
@@ -15,6 +16,7 @@ const JumpingJack = () => {
 
   //Rep Counter
   const [noOfReps, setNoOfReps] = useState(0);
+  const [set, setSet] = useState(0);
   
   //Confidence Test case
   const [shoulder_confidence, setShoulderCon] = useState (NaN);
@@ -61,7 +63,9 @@ const JumpingJack = () => {
 
         if ((stage =='Standing') && (wristL[1]<shoulderL[1]) && (wristR[1]<shoulderR[1]) && difference > 200){
           setStage('not standing');
-          setNoOfReps(pre=>pre+1);
+          if (set < set_Limit){
+            setNoOfReps(pre=>pre+1);
+          }
         }
         
       }
@@ -85,18 +89,25 @@ const JumpingJack = () => {
       step_into_frame++;
     }
 
+    if (set < set_Limit){
+      if (noOfReps == 10){
+        setNoOfReps(0);
+        setSet(pre=>pre+1);
+      }
+    }
+
   }; //POSE Detect
 
 
 
   return (
     <View style={{flex: 1}}>
-      <Text>Jumping Jack</Text>
+      <Text>Jumping Jack                                                          Set:{set}</Text>
       <HumanPose
         height={500}
         width={400}
         enableKeyPoints={true}
-        flipHorizontal={false}
+        flipHorizontal={true}
         enableSkeleton ={true}
         isBackCamera={false}
         color={'255, 0, 0'}

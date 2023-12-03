@@ -9,56 +9,98 @@ import DumbbellDeadlift from './Screens/DumbbellDeadlift';
 import JumpingJack from './Screens/JumpingJack';
 import ShoulderPress from './Screens/ShoulderPress';
 
+//New
+import Burpees from './Screens/Burpees';
+import ButtKicks from './Screens/ButtKicks';
+import HighKnees from './Screens/HighKnees';
+import LateralRaises from './Screens/LateralRaises';
+import MoutainClimbers from './Screens/MountainClimbers';
+import SideLunges from './Screens/SideLunges';
+import SideHeelSquat from './Screens/SideHeelSquat';
+
 const App = () => {
-  const [currentEx, setCurrentEX] = useState(0);
-  
+  const [ExArr, setExArr] = useState (['BicepCurl', 'PushUp', 'Squats', 'WallSit', 'DumbbellDeadlift', 'JumpingJack', 
+                                       'ShoulderPress', 'LateralRaises', 'SideLunges', 'Burpees', 'ButtKicks', 'HighKnees', 
+                                       'MountainClimbers', 'SideHeelSquat']);
+                                       
+  const [itr, setItr] = useState(0);
+  const [currentEx, setCurrentEX] = useState(ExArr[itr]);
+
   const Helper= () => {
-    if (currentEx<0){
-      setCurrentEX(0);
-      return <Squats/>;
+    
+    if (currentEx == 'Squats'){
+       return <Squats/>;
+     }
+    else if (currentEx == 'BicepCurl'){
+       return <BicepCurl/>;
+     }
+    else if (currentEx == 'PushUp'){
+       return <PushUp/>;
+     }
+    else if (currentEx == 'WallSit'){
+       return <WallSit/>;
+     }
+    else if (currentEx == 'DumbbellDeadlift'){
+       return <DumbbellDeadlift/>;
+     }
+    else if (currentEx == 'JumpingJack'){
+       return <JumpingJack/>;
+     }
+    else if (currentEx == 'ShoulderPress'){
+       return <ShoulderPress/>;
+     }
+    else if (currentEx == 'LateralRaises'){
+       return <LateralRaises/>;
+     }
+    else if (currentEx == 'ButtKicks'){
+       return <ButtKicks/>;
+     }
+    else if (currentEx == 'SideLunges'){
+       return <SideLunges/>;
+     }
+    else if (currentEx == 'HighKnees'){
+       return <HighKnees/>;
+     }
+    else if (currentEx == 'Burpees'){
+       return <Burpees/>;
     }
-    else if (currentEx>6){
-      setCurrentEX(6);
-      return <ShoulderPress/>;
-    }
-    else {
-      if (currentEx == 0){
-        return <Squats/>;
-      }
-      else if (currentEx == 1){
-        return <BicepCurl/>;
-      }
-      else if (currentEx == 2){
-        return <PushUp/>;
-      }
-      else if (currentEx == 3){
-        return <WallSit/>;
-      }
-      else if (currentEx == 4){
-        return <DumbbellDeadlift/>;
-      }
-      else if (currentEx == 5){
-        return <JumpingJack/>;
-      }
-      else if (currentEx == 6){
-        return <ShoulderPress/>;
-      }
-    }
+    else if (currentEx == 'MountainClimbers'){
+      return <MoutainClimbers/>;
+   }
+   else if (currentEx == 'SideHeelSquat'){
+    return <SideHeelSquat/>;
+   }
+    
   }
+  
 
   return (
     <View style={{flex: 1}}>
       <Helper/>
       <Pressable style = {{position: 'absolute', top: 50, zIndex: 10, padding:5, backgroundColor: 'rgba(255,255,255,0.3)'}} 
       onPress={()=>{
-        setCurrentEX(pre=>pre-1);
+       if (itr<=0){
+        setItr(0);
+        setCurrentEX(ExArr[itr]);
+       }
+       else {
+        setCurrentEX(ExArr[itr -1]);
+        setItr(pre=>pre-1); 
+       }
       }}>
         <Text>Left</Text>
       </Pressable>
       
       <Pressable style = {{position: 'absolute',left: 220 ,top: 50, zIndex: 10, padding:5, backgroundColor: 'rgba(255,255,255,0.3)'}} 
       onPress={()=>{
-        setCurrentEX(pre=>pre+1);
+        if (itr >= ExArr.length-1){
+          setItr(ExArr.length-1);
+          setCurrentEX(ExArr[itr]);
+        }
+        else {
+          setCurrentEX(ExArr[itr+1]);
+          setItr(pre=>pre+1);
+        }
       }}>
         <Text>Right</Text>
       </Pressable>

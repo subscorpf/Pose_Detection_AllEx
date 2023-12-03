@@ -8,9 +8,12 @@ let lean_forward = 0;
 let lean_backward = 0;
 let lower_hip = 0;
 let step_into_frame =0;
+let set_Limit= 1;
+
 const Squats = () => {
     //Rep Counter
     const [noOfReps, setNoOfReps] = useState(0);
+    const [set, setSet] = useState(0);
   
     //Confidence Test case
     const [knee_confidence, setKneeCon] = useState (NaN);
@@ -131,7 +134,9 @@ const Squats = () => {
       else if (stage =='Standing' && vert_hipAngle>=20 && vert_hipAngle<=44 && vert_kneeAngle>=75 && vert_kneeAngle<=85){
         setStage('Down');
         Tts.speak('Correct Squat');
-        setNoOfReps(pre=>pre+1); 
+        if (set < set_Limit){
+          setNoOfReps(pre=>pre+1);
+        }
       }
 
 
@@ -150,6 +155,12 @@ const Squats = () => {
         step_into_frame++;
       }
       
+      if (set < set_Limit){
+        if (noOfReps == 10){
+          setNoOfReps(0);
+          setSet(pre=>pre+1);
+        }
+      }
       
     }; //POSE Detect
   
@@ -157,12 +168,12 @@ const Squats = () => {
 
   return (
     <View style={{flex: 1}}>
-      <Text>Squats</Text>
+      <Text>Squats                                                          Set:{set}</Text>
       <HumanPose
         height={500}
         width={400}
         enableKeyPoints={true}
-        flipHorizontal={false}
+        flipHorizontal={true}
         enableSkeleton ={true}
         isBackCamera={false}
         color={'255, 0, 0'}

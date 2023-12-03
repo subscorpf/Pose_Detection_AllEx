@@ -6,9 +6,12 @@ import { find_angle } from '../Util/HelperFunction';
 
 let step_into_frame =0;
 let arms_straight = 0;
+let set_Limit= 1;
+
 const PushUp = () => {
     //Rep Counter
     const [noOfReps, setNoOfReps] = useState(0);
+    const [set, setSet] = useState(0);
   
     //Confidence Test case
     const [elbow_confidence, setElbowCon] = useState (NaN);
@@ -70,12 +73,14 @@ const PushUp = () => {
 
          if (stage=='Up' && AngleL<110 && AngleR<110){
           setStage('Down');
-          setNoOfReps(pre=>pre+1);
+          if (set < set_Limit){
+            setNoOfReps(pre=>pre+1);
+          }
           Tts.speak('Correct Push up');
-          console.log('**********************');
-          console.log('Angle L = ', AngleL);
-          console.log('Angle R = ', AngleR);
-          console.log('**********************');
+          // console.log('**********************');
+          // console.log('Angle L = ', AngleL);
+          // console.log('Angle R = ', AngleR);
+          // console.log('**********************');
          }
 
 
@@ -89,6 +94,13 @@ const PushUp = () => {
         step_into_frame++;
       }
 
+      if (set < set_Limit){
+        if (noOfReps == 10){
+          setNoOfReps(0);
+          setSet(pre=>pre+1);
+        }
+      }
+
       
     }; //POSE Detect
   
@@ -96,12 +108,12 @@ const PushUp = () => {
 
   return (
     <View style={{flex: 1}}>
-      <Text>Push Up</Text>
+      <Text>Push Up                                                          Set:{set}</Text>
       <HumanPose
         height={500}
         width={400}
         enableKeyPoints={true}
-        flipHorizontal={false}
+        flipHorizontal={true}
         enableSkeleton ={true}
         isBackCamera={false}
         color={'255, 0, 0'}

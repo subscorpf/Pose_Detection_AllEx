@@ -8,10 +8,12 @@ let step_into_frame= 0;
 let put_arms_close = 0;
 let arms_straight = 0;
 let go_lower = 0;
+let set_Limit= 1;
 
 const DumbbellDeadlift = () => {
   //Rep Counter
   const [noOfReps, setNoOfReps] = useState(0);
+  const [set, setSet] = useState(0);
   
   //Confidence Test case
   const [shoulder_confidence, setShoulderCon] = useState (NaN);
@@ -99,8 +101,10 @@ const DumbbellDeadlift = () => {
         }
         if (stage=='Up' && pose[0]?.pose?.leftWrist?.y > pose[0]?.pose?.leftKnee?.y+20 && pose[0]?.pose?.rightWrist?.y > pose[0]?.pose?.rightKnee?.y+20){
           setStage('Down');
-          setNoOfReps(pre=>pre+1);
-        }
+          if (set < set_Limit){
+            setNoOfReps(pre=>pre+1);
+          }
+          }
         
       }
 
@@ -117,18 +121,26 @@ const DumbbellDeadlift = () => {
       step_into_frame++;
     }
 
+    //Check set
+    if (set < set_Limit){
+      if (noOfReps == 10){
+        setNoOfReps(0);
+        setSet(pre=>pre+1);
+      }
+    }
+
   }; //POSE Detect
 
 
 
   return (
     <View style={{flex: 1}}>
-      <Text>Dumbbell Deadlift</Text>
+      <Text>Dumbbell Deadlift                                                          Set:{set}</Text>
       <HumanPose
         height={500}
         width={400}
         enableKeyPoints={true}
-        flipHorizontal={false}
+        flipHorizontal={true}
         enableSkeleton ={true}
         isBackCamera={false}
         color={'255, 0, 0'}
