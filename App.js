@@ -1,6 +1,8 @@
 import React, {useEffect, useState} from 'react';
 import HumanPose from 'react-native-human-pose';
 import {View, Text, Pressable} from 'react-native';
+import { Dimensions } from 'react-native';
+
 import BicepCurl from './Screens/BicepCurl';
 import PushUp from './Screens/PushUp';
 import Squats from './Screens/Squats';
@@ -19,12 +21,16 @@ import SideLunges from './Screens/SideLunges';
 import SideHeelSquat from './Screens/SideHeelSquat';
 
 const App = () => {
-  const [ExArr, setExArr] = useState (['BicepCurl', 'PushUp', 'Squats', 'WallSit', 'DumbbellDeadlift', 'JumpingJack', 
-                                       'ShoulderPress', 'LateralRaises', 'SideLunges', 'Burpees', 'ButtKicks', 'HighKnees', 
+  const [ExArr, setExArr] = useState (['Burpees','BicepCurl', 'PushUp', 'Squats', 'WallSit', 'DumbbellDeadlift', 'JumpingJack', 
+                                       'ShoulderPress', 'LateralRaises', 'SideLunges','ButtKicks', 'HighKnees', 
                                        'MountainClimbers', 'SideHeelSquat']);
                                        
   const [itr, setItr] = useState(0);
   const [currentEx, setCurrentEX] = useState(ExArr[itr]);
+  const {width, height} = Dimensions.get('screen');
+
+  console.log('Width = ', width);
+  console.log('Height = ', height);
 
   const Helper= () => {
     

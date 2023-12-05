@@ -72,7 +72,7 @@ const ShoulderPress = () => {
         if ((AngleL<95) && (AngleR<95)){
           setStage('Down');
         }
-        if (stage=='Down' && AngleL>160 && AngleR>160){
+        if (stage=='Down' && AngleL>140 && AngleR>140){
           setStage('Up');
           if (set < set_Limit){
             setNoOfReps(pre=>pre+1);
@@ -97,6 +97,10 @@ const ShoulderPress = () => {
         setSet(pre=>pre+1);
       }
     }
+    console.log('******************************');
+    console.log('Angle L : ', AngleL);
+    console.log('Angle R : ', AngleR);
+    console.log('******************************');
 
   }; //POSE Detect
 

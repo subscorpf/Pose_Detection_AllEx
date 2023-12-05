@@ -5,8 +5,19 @@ import Tts from 'react-native-tts';
 
 
 let step_into_frame= 0;
+let set_time_limit= 30; //-->Timer Limit
+let set_Limit= 3;
 
 const Burpees = () => {
+  //Set counter
+  const [set, setSet] = useState(0);
+
+  //
+  const [buttonName, setButtonName] = useState('Start');
+
+  //Boolean to Start timer
+  const [user_start, setUserStart] = useState(false);
+
   //Boolean to check of user Visibility (For StopWatch)
   const [user_visibility, setUserVisibility] = useState(false);
 
@@ -23,6 +34,7 @@ const Burpees = () => {
       setTimer((timer) => timer + 1);
     }, 1000);
   };
+  
 
   //Everytime visbility changes run useEfftect
   useEffect(()=> {
@@ -42,8 +54,26 @@ const Burpees = () => {
   // function to handle the reset button press
   const handleReset = () => {
     clearInterval(countRef.current);
+    setButtonName("Start");
+    setUserStart(false);
+    setUserVisibility(false);
     setTimer(0);
   };
+  
+  const handleStartBool = () => {
+    if (buttonName == "Start"){
+      setUserStart(true);
+      setButtonName("Pause");
+    }
+    else if (buttonName == "Pause"){
+      handlePause();
+      setUserStart(false);
+      setButtonName("Start");
+      setUserVisibility(false);
+    }
+  };
+  
+
   // calculate the time values for display
   const formatTime = (time) => {
     const minutes = Math.floor(time / 60);
@@ -57,7 +87,22 @@ const Burpees = () => {
     setShoulderCon(pose[0]?.pose?.leftShoulder?.confidence + pose[0]?.pose?.rightShoulder?.confidence)
      //Get user Joints
      if (shoulder_confidence > 1.5){
-      setUserVisibility(true);
+
+      if(user_start == true){
+        if(timer % 60 == set_time_limit){
+          handleReset()
+          if (set < set_Limit){
+            setSet(pre=>pre+1)
+          }
+        }
+        else {
+          setUserVisibility(true);
+        }
+      }
+      else {
+        setUserVisibility(false);
+      }
+
       
       
     }
@@ -70,17 +115,21 @@ const Burpees = () => {
       step_into_frame++;
     }
 
-
+    console.log('************');
+    console.log('User Visibility = ', user_visibility);
+    console.log('User Start = ', user_start);
+    console.log('************');
 
   }; //POSE Detect
 
+  
 
 
   return (
     <>
 
     <View style={{flex: 1}}>
-      <Text>Burpees</Text>
+      <Text>Burpees                                                          Set:{set}</Text>
       <HumanPose
         height={500}
         width={400}
@@ -94,6 +143,10 @@ const Burpees = () => {
     </View>
 
       <View style={styles.timerContainer}>
+      <TouchableOpacity style={styles.button} onPress={handleStartBool}>
+              <Text style={styles.buttonText}>{buttonName}</Text>
+        </TouchableOpacity>
+
         <Text style={styles.timer}>{formatTime(timer)}</Text>
 
         <TouchableOpacity style={styles.button} onPress={handleReset}>
